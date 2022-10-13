@@ -7,3 +7,5 @@ type Items struct {
 	Quantity    int    `json:"quantity"`
 	Order_id    string `json:"order_id"`
 }
+
+var ItemDatas = []Items{}

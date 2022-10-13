@@ -28,3 +28,36 @@ func CreateData(k *gin.Context) {
 		"Data Order Item": newOrder,
 	})
 }
+
+func UpdateData(k *gin.Context) {
+	orderID := k.Param("orderID")
+	condition := false
+
+	var updateOrder models.Orders
+
+	if err := k.ShouldBindJSON(&updateOrder); err != nil {
+		k.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	for i, order := range models.OrderDatas {
+		if orderID == order.Order_id {
+			condition = true
+			models.OrderDatas[i] = updateOrder
+			models.OrderDatas[i].Order_id = orderID
+			break
+		}
+	}
+
+	if !condition {
+		k.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"error_status":  "Data Not Found",
+			"error_message": fmt.Sprintf("Order with id %v not found", orderID),
+		})
+		return
+	}
+
+	k.JSON(http.StatusOK, gin.H{
+		"Message": fmt.Sprintf("Order with id %v has been updated successfully", orderID),
+	})
+}

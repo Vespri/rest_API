@@ -11,7 +11,7 @@ func StartServer() *gin.Engine {
 
 	router.POST("/create", controllers.CreateData)
 
-	// router.PUT("/cars/:carID", controllers.UpdateCar)
+	router.PUT("/update/:orderID", controllers.UpdateData)
 
 	// router.GET("/cars_all", controllers.GetCar)
 
