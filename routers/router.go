@@ -13,7 +13,7 @@ func StartServer() *gin.Engine {
 
 	router.PUT("/update/:orderID", controllers.UpdateData)
 
-	// router.GET("/cars_all", controllers.GetCar)
+	router.GET("/get_all", controllers.GetAllData)
 
 	// router.GET("/cars/:carID", controllers.GetCar)
 

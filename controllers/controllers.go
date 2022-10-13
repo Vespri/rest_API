@@ -17,7 +17,7 @@ func CreateData(k *gin.Context) {
 	}
 
 	newOrder.Order_id = fmt.Sprintf("%d", len(models.OrderDatas)+1)
-	newOrder.Items[0].Item_id = fmt.Sprintf("%d", len(models.ItemDatas)+1)
+	newOrder.Items[0].Item_id = fmt.Sprintf("%d", len(models.OrderDatas)+1)
 	newOrder.Items[0].Order_id = newOrder.Order_id
 
 	fmt.Println(newOrder)
@@ -45,6 +45,8 @@ func UpdateData(k *gin.Context) {
 			condition = true
 			models.OrderDatas[i] = updateOrder
 			models.OrderDatas[i].Order_id = orderID
+			models.OrderDatas[i].Items[0].Item_id = orderID
+			models.OrderDatas[i].Items[0].Order_id = orderID
 			break
 		}
 	}
@@ -59,5 +61,20 @@ func UpdateData(k *gin.Context) {
 
 	k.JSON(http.StatusOK, gin.H{
 		"Message": fmt.Sprintf("Order with id %v has been updated successfully", orderID),
+	})
+}
+
+func GetAllData(k *gin.Context) {
+	condition := true
+
+	if !condition {
+		k.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"error_status": "Data Not Found",
+		})
+		return
+	}
+
+	k.JSON(http.StatusOK, gin.H{
+		"Order Datas": models.OrderDatas,
 	})
 }
