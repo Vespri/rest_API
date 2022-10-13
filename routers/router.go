@@ -15,9 +15,9 @@ func StartServer() *gin.Engine {
 
 	router.GET("/get_all", controllers.GetAllData)
 
-	// router.GET("/cars/:carID", controllers.GetCar)
+	router.GET("/get/:orderID", controllers.GetDataByID)
 
-	// router.DELETE("/cars/:carID", controllers.DeleteCar)
+	router.DELETE("/delete/:orderID", controllers.DeleteData)
 
 	return router
 }

@@ -74,7 +74,72 @@ func GetAllData(k *gin.Context) {
 		return
 	}
 
+	if len(models.OrderDatas) < 1 {
+		k.JSON(http.StatusOK, gin.H{
+			"Order Datas": "Order Data is Empty",
+		})
+	} else {
+		k.JSON(http.StatusOK, gin.H{
+			"Order Datas": models.OrderDatas,
+		})
+	}
+
+}
+
+func GetDataByID(k *gin.Context) {
+	orderID := k.Param("orderID")
+	condition := false
+
+	var orderData models.Orders
+
+	for i, order := range models.OrderDatas {
+		if orderID == order.Order_id {
+			condition = true
+			orderData = models.OrderDatas[i]
+			break
+		}
+	}
+
+	if !condition {
+		k.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"error_status":  "Data Not Found",
+			"error_message": fmt.Sprintf("Order with id %v not found", orderID),
+		})
+		return
+	}
+
 	k.JSON(http.StatusOK, gin.H{
-		"Order Datas": models.OrderDatas,
+		"Order": orderData,
+	})
+}
+
+func DeleteData(k *gin.Context) {
+	orderID := k.Param("orderID")
+	condition := false
+
+	var orderIndex int
+
+	for i, order := range models.OrderDatas {
+		if orderID == order.Order_id {
+			condition = true
+			orderIndex = i
+			break
+		}
+	}
+
+	if !condition {
+		k.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"error_status":  "Data Not Found",
+			"error_message": fmt.Sprintf("Order with id %v not found", orderID),
+		})
+		return
+	}
+
+	copy(models.OrderDatas[orderIndex:], models.OrderDatas[orderIndex+1:])
+	models.OrderDatas[len(models.OrderDatas)-1] = models.Orders{}
+	models.OrderDatas = models.OrderDatas[:len(models.OrderDatas)-1]
+
+	k.JSON(http.StatusOK, gin.H{
+		"Message": fmt.Sprintf("Order with id %v has been deleted successfully", orderID),
 	})
 }
